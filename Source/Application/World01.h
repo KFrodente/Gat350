@@ -14,6 +14,7 @@ namespace nc
 
 	private:
 		float m_angle = 0;
+		float m_angleAmount = 0;
 		float m_time;
 		vec2 m_position;
 	};
