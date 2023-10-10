@@ -22,7 +22,7 @@ namespace nc
         m_position.y += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_S) ? -dt : 0;
         m_position.y += ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_W) ? dt : 0;
 
-        m_angleAmount = ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_E) ? 1 : 0;
+        m_angleAmount = ENGINE.GetSystem<InputSystem>()->GetKeyDown(SDL_SCANCODE_E) ? 1.0f : 0;
         m_time += dt;
     }
 
