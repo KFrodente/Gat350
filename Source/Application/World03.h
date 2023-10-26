@@ -1,6 +1,7 @@
 #pragma once
 #include "Framework/World.h"
 #include "Renderer/Renderer.h"
+#include "Core/Math/Transform.h"
 
 
 namespace nc
@@ -24,8 +25,9 @@ namespace nc
 
 		Transform m_transform;
 
+		res_t<Material> m_material;
 
-		GLuint m_vao;
+		res_t<VertexBuffer> m_vertexBuffer;
 		res_t<Program> m_program;
 
 		res_t<Texture> m_texture;
