@@ -1,5 +1,7 @@
 #include "Scene.h"
 #include "Framework/Components/CollisionComponent.h"
+#include "Framework/Components/LightComponent.h"
+#include "Framework/Components/CameraComponent.h"
 
 namespace nc
 {
@@ -12,6 +14,7 @@ namespace nc
 
 	void Scene::Update(float dt)
 	{
+		m_dt = dt;
 		// update and remove destroyed actors
 		auto iter = m_actors.begin();
 		while (iter != m_actors.end())
@@ -23,6 +26,43 @@ namespace nc
 
 	void Scene::Draw(Renderer& renderer)
 	{
+		// get light components
+		auto lights = GetComponents<LightComponent>();
+	
+
+		// get camera component
+		auto cameras = GetComponents<CameraComponent>();
+		// get first active camera
+		CameraComponent* camera = (!cameras.empty()) ? cameras[0] : nullptr;
+		// get all shader programs in the resource system
+		auto programs = GET_RESOURCES(Program);
+		// set all shader programs camera and lights uniforms
+		for (auto& program : programs)
+		{
+			program->Use();
+
+
+			if (camera) camera->SetProgram(program);
+
+			// set lights in shader program
+			int index = 0;
+			for (auto light : lights)
+			{
+				std::string name = "lights[" + std::to_string(index++) + "]";
+				glm::mat4 view = (camera) ? camera->view : glm::mat4();
+
+
+				light->SetProgram(program, name, view);
+			}
+
+
+
+			program->SetUniform("numLights", index);
+			program->SetUniform("ambientLight", ambientColor);
+		}
+
+
+
 		for (auto& actor : m_actors)
 		{
 			if (actor->active) actor->Draw(renderer);
@@ -42,6 +82,20 @@ namespace nc
 		while (iter != m_actors.end())
 		{
 			(force || !(*iter)->persistent) ? iter = m_actors.erase(iter) : iter++;
+		}
+	}
+
+	void Scene::Remove(Actor* actor)
+	{
+		auto iter = m_actors.begin();
+		while (iter != m_actors.end())
+		{
+			if ((*iter).get() == actor)
+			{
+				m_actors.erase(iter);
+				break;
+			}
+			iter++;
 		}
 	}
 
@@ -82,6 +136,19 @@ namespace nc
 				}
 			}
 		}
+
+	}
+
+	void Scene::ProcessGui()
+	{
+		float fps = 1 / m_dt;
+		float ms = 1000 * m_dt;
+		ImVec4 color = (fps < 30) ? ImVec4{ 1, 0, 0, 1 } : ImVec4{ 1, 1, 1, 1 };
+		ImGui::TextColored(color, "%.2f fps (%.2f)", fps, ms);
+		ImGui::ColorEdit3("Ambient", glm::value_ptr(ambientColor));
+
+
+		
 
 	}
 

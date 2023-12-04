@@ -25,6 +25,8 @@ namespace nc
 		int m_xTile = 1;
 		int m_yTile = 1;
 
+		float m_refraction = 1;
+
 
 		glm::vec3 m_ambientColor{0.25f, 0.25f, 0.25f};
 

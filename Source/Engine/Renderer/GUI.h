@@ -1,7 +1,10 @@
 #pragma once
+#include "Core/FileIO.h"
+#include "Framework/Resource/ResourceManager.h"
 #include "Framework/System.h"
 #include <imgui/imgui_impl_sdl.h>
 #include <imgui/imgui_impl_opengl3.h>
+#include <imgui/ImFileDialog.h>
 #include <SDL2-2.28.4/include/SDL.h>
 
 namespace nc
@@ -22,6 +25,31 @@ namespace nc
 		void EndFrame();
 		void Draw();
 
+		template<typename T>
+		static bool GetDialogueResource(res_t<T>& resource, const std::string& dialogueName, const std::string& title, const std::string& fileType);
+
 		void ProcessEvent(SDL_Event& event);
 	};
+
+	template<typename T>
+	inline bool Gui::GetDialogueResource(res_t<T>& resource, const std::string& dialogueName, const std::string& title, const std::string& fileType)
+	{
+		if (ImGui::IsItemClicked(0))
+		{
+			ifd::FileDialog::Instance().Open(dialogueName, title, fileType, false);
+		}
+		if (ifd::FileDialog::Instance().IsDone(dialogueName))
+		{
+			if (ifd::FileDialog::Instance().HasResult())
+			{
+				auto resourceName = GetRelativePath(ifd::FileDialog::Instance().GetResult());
+				resource = GET_RESOURCE(T, resourceName);
+			}
+			ifd::FileDialog::Instance().Close();
+			return true;
+		}
+
+		return false;
+		return false;
+	}
 }

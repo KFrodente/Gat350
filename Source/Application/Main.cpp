@@ -1,8 +1,4 @@
-#include "World01.h"
-#include "World02.h"
-#include "World03.h"
-#include "World04.h"
-#include "World05.h"
+#include "World08.h"
 #include "Core/Core.h"
 #include "Framework/Framework.h"
 #include "Renderer/Renderer.h"
@@ -19,8 +15,17 @@ int main(int argc, char* argv[])
 
 	ENGINE.Initialize();
 
-	auto world = make_unique<nc::World05>();
+	auto world = make_unique<nc::World08>();
 	world->Initialize();
+
+	string testString = "THIS is a TEST string";
+	cout << nc::StringUtils::ToUpper(testString) << endl;
+	cout << nc::StringUtils::ToLower(testString) << endl;
+	if (nc::StringUtils::IsEqualIgnoreCase(nc::StringUtils::ToUpper(testString), nc::StringUtils::ToLower(testString)))
+	{
+		cout << "true" << endl;
+	}
+	cout << nc::StringUtils::CreateUnique(testString);
 
 	// main loop
 	bool quit = false;

@@ -8,6 +8,7 @@ namespace nc
 	
 	Actor::Actor(const Actor& other)
 	{
+		active = other.active;
 		name = other.name;
 		tag = other.tag;
 		lifespan = other.lifespan;
@@ -74,6 +75,8 @@ namespace nc
 
 	void Actor::ProcessGui()
 	{
+		//actor information
+		ImGui::TextColored({ randomf(0.6f, 1), randomf(0.6f, 1), randomf(0.6f, 1), 1 }, "%s", GetClassName());
 		ImGui::Text("Name: %s", name.c_str());
 		ImGui::Text("Tag: %s", tag.c_str());
 		ImGui::Checkbox("Active", &active);
@@ -83,6 +86,7 @@ namespace nc
 		for (auto& component : components)
 		{
 			ImGui::Separator();
+			ImGui::TextColored({ randomf(0.6f, 1), randomf(0.6f, 1), randomf(0.6f, 1), 1}, "%s", component->GetClassName());
 			component->ProcessGui();
 		}
 	}
